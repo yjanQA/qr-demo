@@ -530,6 +530,11 @@ const Auth = (() => {
   const renderAdmin = () => {
     const body = document.getElementById('auth-admin-body');
     if (!body) return;
+    // (데모) 정적 호스팅 한계 안내 — 여기서 만든 계정·승인은 다른 사람 기기에 전달되지 않음
+    const demoNotice = `<div style="margin:12px 16px 0;padding:10px 14px;border:1px solid #e0a030;background:rgba(224,160,48,.08);border-radius:8px;font-size:12px;line-height:1.6">
+      ⚠️ <b>데모 안내:</b> 이 데모는 서버 없이 동작하므로 계정이 <b>브라우저마다 별개</b>입니다.
+      여기서 계정을 승인해도 <b>다른 사람 기기에는 적용되지 않습니다.</b><br>
+      외부 체험자는 본인 기기에서 <b>초록 "데모 바로 입장" 버튼</b>을 누르거나 직접 가입(즉시 사용 가능)하면 됩니다.</div>`;
     const users = readUsers().slice().sort((a, b) => (a.status === 'PENDING' ? -1 : 0) - (b.status === 'PENDING' ? -1 : 0));
     const me = currentUser()?.id;
     const groups = ['PENDING', 'APPROVED', 'REJECTED'];
@@ -563,9 +568,10 @@ const Auth = (() => {
         </div>`;
     };
     body.innerHTML = `
+      ${demoNotice}
       <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
         <div class="info-box info-blue">
-          가입은 <b>@${DOMAIN}</b> 이메일만 가능하며, 신규 신청은 여기서 <b>승인</b>해야 로그인됩니다.<br>
+          (데모) 가입은 아무 이메일이나 가능하고 <b>즉시 자동 승인</b>됩니다 — 이 화면의 승인 절차는 데모에서는 필요 없습니다.<br>
           <span class="text-muted" style="font-size:11px">· <b>마스터 지정</b>: 공동 마스터 추가 · <b>권한 이양</b>: 상대를 마스터로 넘기고 본인은 일반 사용자로 전환</span>
         </div>
         ${groups.map(section).join('') || '<div class="text-muted">사용자가 없습니다</div>'}
