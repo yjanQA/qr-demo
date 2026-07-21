@@ -76,9 +76,8 @@ const LabCOA = (() => {
     <div class="coa-sheet">
       <div class="coa-brand">
         <svg viewBox="0 0 120 100" width="52" height="43" aria-label="우성사료">
-          <rect width="120" height="100" rx="14" fill="#17191f"/>
-          <path d="M22 30 L37 74 L54 44 L71 74 L86 30" fill="none" stroke="#E4002B" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="102" cy="46" r="6" fill="#E4002B"/><circle cx="102" cy="66" r="6" fill="#E4002B"/>
+          <path d="M22 28 L38 76 L54 44 L70 76 L86 28" fill="none" stroke="#E4002B" stroke-width="13" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/>
+          <rect x="96" y="42" width="14" height="14" rx="3" fill="#E4002B"/><rect x="96" y="63" width="14" height="14" rx="3" fill="#E4002B"/>
         </svg>
         <div class="coa-title">시 험 성 적 서</div>
         <div style="width:52px"></div>
