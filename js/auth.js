@@ -182,6 +182,12 @@ const Auth = (() => {
   const renderLogin = () => {
     const ov = document.getElementById('auth-overlay');
     if (!ov) return;
+    // (데모) 이 브라우저에 존재하지 않는 계정이 '아이디 저장'으로 남아 자동입력되는 함정 제거
+    //   (실앱에서 쓰던 yjan@… 이 데모에 프리필돼 '등록되지 않은 계정' 을 유발)
+    try {
+      const se = savedEmail();
+      if (se && !findUser(se)) localStorage.removeItem(SAVED_EMAIL_KEY);
+    } catch (_) {}
     const isSignup = mode === 'signup';
     ov.innerHTML = `
       <div class="auth-card">
@@ -303,7 +309,7 @@ const Auth = (() => {
     const pw = document.getElementById('auth-pw')?.value || '';
     if (!email || !pw) return setMsg('이메일과 비밀번호를 입력하세요');
     const user = findUser(email);
-    if (!user) return setMsg('등록되지 않은 계정입니다');
+    if (!user) return setMsg('등록되지 않은 계정입니다.<br>데모는 상단 <b>초록 "데모 바로 입장" 버튼</b>을 누르거나,<br><b>demo@woosung.kr</b> + 아무 비밀번호(6자 이상)로 로그인하세요.');
     if (user.status === 'PENDING')  return setMsg('승인 대기 중인 계정입니다. 마스터 승인 후 로그인하세요.');
     if (user.status === 'REJECTED') return setMsg('가입이 거절된 계정입니다. 관리자에게 문의하세요.');
 
@@ -319,7 +325,7 @@ const Auth = (() => {
       toast('마스터 비밀번호가 설정되었습니다', 'success');
       return enterApp();
     }
-    if (hashPw(user.salt, pw) !== user.passwordHash) return setMsg('비밀번호가 일치하지 않습니다');
+    if (hashPw(user.salt, pw) !== user.passwordHash) return setMsg('비밀번호가 일치하지 않습니다.<br>기억나지 않으면 상단 <b>초록 "데모 바로 입장" 버튼</b>으로 들어오세요.');
     rememberEmail(email);   // 로그인 성공 시에만 아이디 저장/해제
     setSession(email);
     enterApp();
