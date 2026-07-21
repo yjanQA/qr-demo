@@ -126,10 +126,10 @@ const QualityWorkmapPage = (() => {
           <div class="wm-progress"><div class="wm-progress-fill" style="width:${score}%"></div></div>
         </div>
         <div class="wm-stats">
-          <button class="wm-stat ${filter === 'live' ? 'on' : ''}" onclick="QualityWorkmapPage.setFilter('live')">
-            <b class="wm-live">🟢 ${c.live}</b><span>연동</span></button>
           <button class="wm-stat ${filter === 'all' ? 'on' : ''}" onclick="QualityWorkmapPage.setFilter('all')">
             <b>${c.total}</b><span>전체 세부업무</span></button>
+          <button class="wm-stat ${filter === 'live' ? 'on' : ''}" onclick="QualityWorkmapPage.setFilter('live')">
+            <b class="wm-live">🟢 ${c.live}</b><span>연동</span></button>
           <button class="wm-stat ${filter === 'gap' ? 'on' : ''}" onclick="QualityWorkmapPage.setFilter('gap')">
             <b class="wm-none">⚪ ${c.none}</b><span>미구축</span></button>
           <button class="wm-stat ${filter === 'plan' ? 'on' : ''}" onclick="QualityWorkmapPage.setFilter('plan')">
@@ -198,7 +198,8 @@ const QualityWorkmapPage = (() => {
         .wm-stat{background:var(--bg-soft,#f5f5f5);border:1px solid transparent;border-radius:6px;padding:10px 16px;
           cursor:pointer;text-align:center;min-width:96px;transition:.15s;font-family:inherit;}
         .wm-stat:hover{border-color:var(--accent,#3E6AE1);}
-        .wm-stat.on{border-color:var(--accent,#3E6AE1);background:#eef2fd;}
+        /* 선택 상태: 배경을 칠하면 다크 테마에서 글자가 묻히므로 투명 배경 + 테두리만 강조 */
+        .wm-stat.on{border:2px solid var(--accent,#3E6AE1);background:transparent;padding:9px 15px;}
         .wm-stat b{display:block;font-size:19px;}
         .wm-stat span{font-size:11px;color:var(--text-secondary,#5c5f66);}
         .wm-live{color:#16884a;} .wm-part{color:#b8860b;} .wm-none{color:#9aa0a6;} .wm-plan{color:#c0392b;}
@@ -223,7 +224,7 @@ const QualityWorkmapPage = (() => {
         .wm-leaves{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px;}
         .wm-leaf{font-size:10.5px;color:var(--text-secondary,#666);background:var(--bg-soft,#f3f4f6);border-radius:3px;padding:2px 7px;}
         @media (prefers-color-scheme:dark){
-          .wm-stat.on{background:#1e2740;} .wm-leaf,.wm-sub{background:transparent;}
+          .wm-leaf,.wm-sub{background:transparent;}
         }
       </style>
       <div class="wm-wrap">
