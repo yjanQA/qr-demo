@@ -193,6 +193,9 @@ const Auth = (() => {
           </div>
         </div>
 
+        <button class="btn btn-block" style="background:#2e9e5b;color:#fff;font-weight:700;margin-bottom:14px;padding:12px"
+                onclick="Auth.demoEnter()">🚀 데모 바로 입장 — 계정 입력 없이 클릭 한 번</button>
+
         <div class="auth-tabs">
           <button class="auth-tab ${!isSignup ? 'active' : ''}" onclick="Auth.setMode('login')">로그인</button>
           <button class="auth-tab ${isSignup ? 'active' : ''}" onclick="Auth.setMode('signup')">회원가입</button>
@@ -206,7 +209,7 @@ const Auth = (() => {
           <div class="form-group">
             <label class="form-label">이메일 (아이디)</label>
             <input type="email" class="form-input" id="auth-email" placeholder="name@${DOMAIN}" autocomplete="username">
-            <div class="form-hint">@${DOMAIN} 이메일만 가입할 수 있습니다</div>
+            <div class="form-hint">(데모) 아무 이메일이나 가입할 수 있습니다</div>
           </div>
           <div class="form-group">
             <label class="form-label">비밀번호</label>
@@ -256,7 +259,8 @@ const Auth = (() => {
     const pw2 = document.getElementById('auth-pw2')?.value || '';
     if (!name) return setMsg('이름을 입력하세요');
     if (!email) return setMsg('이메일을 입력하세요');
-    if (!validDomain(email)) return setMsg(`@${DOMAIN} 이메일만 가입할 수 있습니다`);
+    // (데모) 외부 체험자는 회사 이메일이 없으므로 도메인 제한 없이 형식만 확인
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return setMsg('올바른 이메일 형식을 입력하세요');
     if (pw.length < 6) return setMsg('비밀번호는 6자 이상이어야 합니다');
     if (pw !== pw2) return setMsg('비밀번호가 일치하지 않습니다');
     const users = readUsers();
@@ -273,6 +277,25 @@ const Auth = (() => {
     mode = 'login';
     renderLogin();
     setMsg('(데모) 가입이 완료되었습니다. 방금 만든 계정으로 바로 로그인하세요.', 'ok');
+  };
+
+  // (데모) 원클릭 입장 — 이메일·비밀번호 입력 없이 마스터 계정으로 바로 들어간다.
+  //   외부 체험자가 도메인 제한·최초 비밀번호 규칙에 걸려 못 들어오는 일을 원천 차단.
+  const demoEnter = () => {
+    try {
+      ensureSeed();
+      const users = readUsers();
+      const m = users.find(u => u.id === MASTER_EMAIL);
+      if (m && m.passwordHash == null) {          // 이 브라우저에서 첫 입장이면 기본 비밀번호로 설정
+        m.salt = genSalt();
+        m.passwordHash = hashPw(m.salt, 'demo1234');
+        writeUsers(users);
+      }
+      setSession(MASTER_EMAIL);
+      enterApp();
+    } catch (e) {
+      setMsg('입장에 실패했습니다: ' + (e && e.message ? e.message : e) + '<br>시크릿/사생활 보호 모드에서는 저장이 막힐 수 있습니다.');
+    }
   };
 
   const doLogin = () => {
@@ -591,7 +614,7 @@ const Auth = (() => {
   else init();
 
   return {
-    init, setMode, doLogin, doSignup, logout, rememberToggle, onEmailInput,
+    init, setMode, doLogin, doSignup, logout, rememberToggle, onEmailInput, demoEnter,
     openAdmin, closeAdmin, approve, reject, toggleRole, transferMaster, removeUser,
     openPerms, closePerms, permAll, savePerms,
     enforceLanding: applyPermissions,
