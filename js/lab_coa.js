@@ -51,8 +51,8 @@ const LabCOA = (() => {
 
   // 회사 정보(성적서 하단 고정) — 우성사료 논산공장 성적서 기준
   const COMPANY = {
-    addr: '33003 / 충청남도 논산시 은진면 안심로 259-3 (주)우성사료',
-    tel: '041-740-4490~4', fax: '041-740-4486', email: 'yjchon@woosung.kr',
+    addr: '(데모) 우성사료 품질시험실',
+    tel: '000-0000-0000', fax: '000-0000-0000', email: 'demo@woosung.kr',
     disclaimer: '(이 성적은 제시된 검체에 한하여 의뢰 목적 이외의 상품선전 및 상업용에 사용할 수 없음)',
   };
 
@@ -152,6 +152,8 @@ const LabCOA = (() => {
     .coa-result th { background:#eee; font-weight:700; text-align:center; }
     .coa-result td.c { text-align:center; }
     .coa-result td.l { text-align:left; }
+    /* 앱 전역 tbody tr:last-child td{border-bottom:none} 가 성적서 표 맨 아랫줄을 지우므로 복원 */
+    .coa-sheet .coa-result tr:last-child td, .coa-sheet .coa-info tr:last-child td { border-bottom:1px solid #000; }
     .coa-approve { margin-top:auto; padding-top:26px; text-align:right; font-size:13px; font-weight:600; padding-right:6px; }
     .coa-footer { margin-top:30px; border-top:1.5px solid #000; padding-top:8px; font-size:11px; color:#222; }
     .coa-footer > div { margin:1px 0; }

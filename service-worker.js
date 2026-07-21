@@ -2,7 +2,7 @@
 // service-worker.js — 현장 설치형 PWA 캐시
 // ============================================================
 
-const CACHE_NAME = 'woosung-qr-demo-v1';
+const CACHE_NAME = 'woosung-qr-demo-v2';
 const APP_SHELL = [
   './',
   './index.html',

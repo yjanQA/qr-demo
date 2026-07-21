@@ -41,6 +41,8 @@ function ensureReportStyle(){
   .rpt-tbl{width:100%;border-collapse:collapse;margin-bottom:12px;}
   .rpt-tbl th,.rpt-tbl td{border:1px solid #000;padding:5px 7px;font-size:11.5px;text-align:center;}
   .rpt-tbl th{background:#eee;font-weight:700;}
+  /* 앱 전역 tbody tr:last-child td{border-bottom:none} 가 보고서 표 맨 아랫줄을 지우므로 복원(전 보고서 공통) */
+  .coa-sheet table tr:last-child td,.coa-sheet table tr:last-child th{border-bottom:1px solid #000;}
   .rpt-tbl td.l{text-align:left;} .rpt-tbl .mono{font-family:'Consolas',monospace;}
   .rpt-ok{color:#0a7d28;font-weight:700;} .rpt-bad{color:#c62222;font-weight:700;}
   .rpt-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-weight:800;font-size:12px;}
