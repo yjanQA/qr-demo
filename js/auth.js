@@ -121,6 +121,7 @@ const Auth = (() => {
   // ── 마스터 계정 시드(최초 비밀번호는 첫 로그인 때 본인 설정) ──
   const ensureSeed = () => {
     const users = readUsers();
+    let dirty = false;
     if (!users.some(u => u.id === MASTER_EMAIL)) {
       users.push({
         id: MASTER_EMAIL, email: MASTER_EMAIL, name: '마스터',
@@ -128,8 +129,18 @@ const Auth = (() => {
         salt: '', passwordHash: null,      // null = 최초 비밀번호 미설정
         createdAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: 'SYSTEM'
       });
-      writeUsers(users);
+      dirty = true;
     }
+    // (데모) 예전 버전에서 가입해 '승인 대기'에 갇힌 계정을 자동 승인으로 전환
+    users.forEach(u => {
+      if (u.status === 'PENDING') {
+        u.status = 'APPROVED';
+        u.approvedAt = new Date().toISOString();
+        u.approvedBy = '데모 자동승인';
+        dirty = true;
+      }
+    });
+    if (dirty) writeUsers(users);
   };
 
   // ── 세션 ──
@@ -208,7 +219,7 @@ const Auth = (() => {
           </div>
           <div class="auth-msg" id="auth-msg"></div>
           <button class="btn btn-primary btn-block" onclick="Auth.doSignup()">가입 신청</button>
-          <div class="auth-foot">가입 신청 후 <b>마스터 승인</b>을 받아야 로그인할 수 있습니다.</div>
+          <div class="auth-foot">(데모) 가입 즉시 사용 가능합니다 — 승인 절차 없이 바로 로그인됩니다.</div>
         ` : `
           <div class="form-group">
             <label class="form-label">이메일 (아이디)</label>
@@ -251,16 +262,17 @@ const Auth = (() => {
     const users = readUsers();
     if (users.some(u => u.id === email)) return setMsg('이미 등록되었거나 신청된 이메일입니다');
     const salt = genSalt();
+    // (데모) 정적 호스팅이라 승인해 줄 마스터가 각 브라우저에 없음 → 가입 즉시 자동 승인
     users.push({
       id: email, email, name,
-      role: 'USER', status: 'PENDING',
+      role: 'USER', status: 'APPROVED',
       salt, passwordHash: hashPw(salt, pw),
-      createdAt: new Date().toISOString(), approvedAt: '', approvedBy: ''
+      createdAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: '데모 자동승인'
     });
     writeUsers(users);
     mode = 'login';
     renderLogin();
-    setMsg('가입 신청이 접수되었습니다. 마스터 승인 후 로그인할 수 있습니다.', 'ok');
+    setMsg('(데모) 가입이 완료되었습니다. 방금 만든 계정으로 바로 로그인하세요.', 'ok');
   };
 
   const doLogin = () => {
